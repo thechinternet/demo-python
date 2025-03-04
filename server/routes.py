@@ -1,4 +1,5 @@
 
+
 from flask import request, render_template, make_response
 
 from server.webapp import flaskapp, cursor
@@ -9,23 +10,17 @@ from server.models import Book
 def index():
     name = request.args.get('name')
     author = request.args.get('author')
-    read = request.args.get('read')
+    read = bool(request.args.get('read'))
 
     if name:
         cursor.execute(
-            "SELECT * FROM books WHERE name LIKE %s", ('%' + name + '%',)
+            "SELECT * FROM books WHERE name LIKE '%" + name + "%'"
         )
         books = [Book(*row) for row in cursor]
 
     elif author:
         cursor.execute(
-            "SELECT * FROM books WHERE author LIKE %s", ('%' + author + '%',)
-        )
-        books = [Book(*row) for row in cursor]
-
-    elif read:
-        cursor.execute(
-            "SELECT * FROM books WHERE read LIKE %s", ('%' + read + '%',)
+            "SELECT * FROM books WHERE author LIKE '%" + author + "%'"
         )
         books = [Book(*row) for row in cursor]
 
